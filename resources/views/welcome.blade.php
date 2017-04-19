@@ -90,6 +90,7 @@
                     <a href="https://github.com/laravel/laravel">GitHub</a>
                 </div>
             </div>
+            <img src="{{url('admin/code')}}" />
         </div>
     </body>
 </html>
