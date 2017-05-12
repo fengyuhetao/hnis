@@ -76,7 +76,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item  ">
+            <li class="nav-item  active open">
                 <a href="javascript:;" class="nav-link nav-toggle">
                     <i class="icon-puzzle"></i>
                     <span class="title">用户管理</span>
@@ -84,19 +84,25 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item  ">
-                        <a href="components_date_time_pickers.html" class="nav-link ">
+                        <a href="{{url('admin/doctor')}}" class="nav-link ">
                             <span class="title">医生管理</span>
                         </a>
                     </li>
                     <li class="nav-item  ">
-                        <a href="components_color_pickers.html" class="nav-link ">
+                        <a href="{{url('admin/patient')}}" class="nav-link ">
                             <span class="title">患者管理</span>
                             {{--<span class="badge badge-danger">2</span>--}}
                         </a>
                     </li>
                     <li class="nav-item  ">
-                        <a href="components_color_pickers.html" class="nav-link ">
+                        <a href="{{url('admin/type')}}" class="nav-link ">
                             <span class="title">分类管理</span>
+                            {{--<span class="badge badge-danger">2</span>--}}
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="{{url('admin/category')}}" class="nav-link ">
+                            <span class="title">类型管理</span>
                             {{--<span class="badge badge-danger">2</span>--}}
                         </a>
                     </li>

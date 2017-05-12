@@ -5,11 +5,68 @@
  * Date: 2017/03/26
  * Time: 22:44
  */
+if(! function_exists('object_array')) {
+    function object_array($array) {
+        if(is_object($array)) {
+            $array = (array)$array;
+        }
+
+        if(is_array($array)) {
+            foreach($array as $key => $value) {
+                $array[$key] =          object_array($value);
+            }
+        }
+        return $array;
+    }
+}
+
 
 //显示头像
 if (! function_exists('show_face')) {
     function show_face($imagePath, $width = 200, $height = 200) {
         return "<image src='". $imagePath ."' width=". $width ." height=". $height .">";
+    }
+}
+
+//显示是否新人
+if(! function_exists('show_is_new')) {
+    function show_is_new($is_new) {
+        if($is_new) {
+            return "<span class=\"label label-sm label-info\"> 新 </span>";
+        } else {
+            return "<span class=\"label label-sm label-warning\"> 老 </span>";
+        }
+    }
+}
+
+//显示是否在线
+if(! function_exists('show_is_online')) {
+    function show_is_online($is_online) {
+        if($is_online) {
+            return "<span class=\"label label-sm label-info\"> 在线 </span>";
+        } else {
+            return "<span class=\"label label-sm label-warning\"> 离线 </span>";
+        }
+    }
+}
+
+//显示是否删除
+if(! function_exists('show_is_delete')) {
+    function show_is_delete($is_delete) {
+        if(!$is_delete) {
+            return "<span class=\"label label-sm label-info\"> 正常 </span>";
+        } else {
+            return "<span class=\"label label-sm label-warning\"> 删除 </span>";
+        }
+    }
+}
+
+if(! function_exists('show_actions')) {
+    function show_actions($id, $table) {
+        $html = "<a href=\"" .url('admin/'.$table.'/show') . "\"><i title=\"查看\" class=\"fa fa-eye\"></i></a>&nbsp";
+        $html .= "<a href=\"" .url('admin/'.$table.''). "/". $id ."/edit\"><i title=\"修改\" class=\"fa fa-edit\"></i></a>&nbsp";
+        $html .= "<a href=\"javascript:;\" id=\"delete_confirm\" onclick=\"doDelete(".$id.")\"><i title=\"删除\" class=\"fa fa-trash\"></i></a>";
+        return $html;
     }
 }
 

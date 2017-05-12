@@ -41,7 +41,31 @@ Route::group(['middleware' => 'admin.check.login', 'prefix'=>'admin', 'namespace
 
     //common
     Route::any('upload', 'CommonController@upload');
+
+    //category
+    Route::get('category/list', 'CategoryController@ajaxGetCategoryList');
+    Route::get('category/getCategoryById', 'CategoryController@getCategoryById');
+    Route::resource('category', 'CategoryController');
+
+    Route::get('doctor/show', 'DoctorController@ajaxGetdoctorList');
+    Route::get('doctor/list', 'DoctorController@ajaxGetdoctorList');
+
+    Route::resource('doctor', 'DoctorController');
+
+    Route::get('patient/show', 'PatientController@ajaxGetPatientList');
+    Route::get('patient/list', 'PatientController@ajaxGetPatientList');
+
+    Route::resource('patient', 'PatientController');
+
+    Route::get('type/show', 'TyperController@ajaxGetTypeList');
+    Route::get('type/list', 'TypeController@ajaxGetTypeList');
+
+    Route::resource('type', 'TypeController');
 });
+
+Route::group(['middleware' => '',  'namespace' => 'Admin'], function() {
+    Route::get('user/regist', 'CommonController@regist');                //用户注册
+}
 
 // 后台系统日志
 Route::group(['prefix' => 'admin/log','middleware' => []],function ($router)

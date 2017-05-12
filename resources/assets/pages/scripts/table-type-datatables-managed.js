@@ -50,7 +50,7 @@ var TableDatatablesManaged = function () {
             "searching": false,  //禁用原生搜索
             "serverSide": true,  //启用服务器端分页
             "autoWidth": true,
-            // "sScrolly": "100%",
+            "sScrolly": "100%",
             "columnDefs": [
                 {  // set default column settings
                     'orderable': false,
@@ -77,7 +77,7 @@ var TableDatatablesManaged = function () {
                 //ajax请求数据
                 $.ajax({
                     type: "get",
-                    url: "doctor/list",
+                    url: "type/list",
                     cache: false,  //禁用缓存
                     data: param,  //传入组装的参数
                     dataType: "json",
@@ -100,21 +100,8 @@ var TableDatatablesManaged = function () {
                 });
             },
             columns: [
-                { "data": "doc_id" },
-                { "data": "doc_name" },
-                { "data": "doc_sm_face" },
-                { "data": "doc_score" },
-                { "data": "doc_seo_keyword" },
-                { "data": "doc_seo_description" },
-                { "data": "doc_sort_num" },
-                { "data": "doc_tel" },
-                { "data": "doc_follow_number" },
-                { "data": "doc_admire_number" },
-                { "data": "doc_hate_number" },
-                { "data": "doc_is_new" },
-                { "data": "doc_is_online" },
-                { "data": "doc_is_delete" },
-                { "data": "doc_addtime"},
+                { "data": "type_id" },
+                { "data": "type_name" },
                 { "data": 'actions'}
             ],
             "order": [
