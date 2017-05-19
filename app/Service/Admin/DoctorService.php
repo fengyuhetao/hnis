@@ -9,16 +9,22 @@
 namespace App\Service\Admin;
 
 
+use App\Repository\Eloquent\CategoryRepositoryEloquent;
+use App\Repository\Eloquent\CommentRepositoryEloquent;
 use App\Repository\Eloquent\DoctorRepositoryEloquent;
 use Exception;
 
 class DoctorService
 {
     private $doctor;
+    private $category;
+    private $comment;
 
-    public function __construct(DoctorRepositoryEloquent $doctor)
+    public function __construct(DoctorRepositoryEloquent $doctor, CategoryRepositoryEloquent $category, CommentRepositoryEloquent $comment)
     {
         $this->doctor = $doctor;
+        $this->category = $category;
+        $this->comment = $comment;
     }
 
     /**
@@ -130,6 +136,7 @@ class DoctorService
             $doctors[$k]['doc_is_online'] = show_is_online($v['doc_is_online']);
             $doctors[$k]['doc_is_delete'] = show_is_delete($v['doc_is_delete']);
             $doctors[$k]['actions'] = show_actions($v['doc_id'], "doctor");
+            $doctors[$k]['doc_portal_show'] = doc_portal_show($v['doc_portal_show']);
         }
 
         $return['data'] = $doctors;
@@ -147,5 +154,135 @@ class DoctorService
             }
         }
         return $array;
+    }
+
+    public function getCarousels()
+    {
+        return $this->doctor->getCarousels(10);
+    }
+
+    public function getPortalDoctors()
+    {
+        $data = array();
+//        查询所有科室
+        $allDeparts = $this->category->findWhere(['cate_parent_id' => 1])->toArray();
+        foreach ($allDeparts as $v) {
+//            查询该科室下所有子科室
+            $childDeparts = $this->category->findWhere(['cate_parent_id' => $v['cate_id']], ['cate_id'])->toArray();
+            $achildDeparts = [];
+            foreach ($childDeparts as $v1) {
+                $achildDeparts[] = $v1['cate_id'];
+            }
+
+//            查询属于这些科室的医生
+            if($v['cate_name'] == "内科") {
+                $doctors = $this->doctor->getDoctorsByCategory($achildDeparts, 7);
+                $v['doctors'] = $doctors;
+                array_unshift($data, $v);
+            } else {
+                $doctors = $this->doctor->getDoctorsByCategory($achildDeparts, 5);
+                $v['doctors'] = $doctors;
+                $data[] = $v;
+            }
+        }
+
+        return $data;
+    }
+
+    public function getDoctorsByWhere($where)
+    {
+        $adeparts = [];
+        if($where['cate_cid']) {
+            $adeparts[] = $where['cate_cid'];
+        } else {
+            //            查询该科室下所有子科室
+            $childDeparts = $this->category->findWhere(['cate_parent_id' => $where['cate_id']], ['cate_id'])->toArray();
+            foreach ($childDeparts as $v) {
+                $adeparts[] = $v['cate_id'];
+            }
+        }
+
+//        查询这下部门下所有医生数目
+        $total = $this->doctor->getTotalNumber($adeparts);
+//        一页15个医生
+        $limit = 15;
+
+        $data = array();
+//        总页数
+        $page_number = ceil($total / 15);
+        $data['page_number'] = $page_number;
+
+        if($where['page'] > $page_number) {
+            $where['page'] = $page_number;
+        }
+
+        if($where['page'] < 1) {
+            $where['page'] = 1;
+        }
+
+//        判断是否有上一页
+        $data['prev'] = $where['page'] == 1 ? 0 : 1;
+//        判断是否有下一页
+        $data['next'] = $where['page'] < $page_number ? 1 : 0;
+
+//        获取医生数据
+        $offset = ($where['page'] - 1) * $limit;
+        $doctors = $this->doctor->getDoctorsByCategory($adeparts, $limit, $offset);
+        $data['doctors'] = $doctors;
+        $data['cate_id'] = $where['cate_id'];
+        $data['cate_cid'] = $where['cate_cid'];
+        $data['page'] = $where['page'];
+        return $data;
+    }
+
+    public function getDoctorById($doc_id)
+    {
+        return $this->doctor->find($doc_id)->toArray();
+    }
+
+    public function getDoctorComments($doc_id, $number = 4)
+    {
+        return $this->comment->getDoctorComments($doc_id, 4);
+    }
+
+    public function getDoctorPatients($doc_id)
+    {
+        return $this->doctor->getDoctorPatients($doc_id);
+    }
+
+    public function follow($doc_id)
+    {
+        return $this->doctor->follow($doc_id);
+    }
+
+    public function zan($doc_id)
+    {
+        return $this->doctor->zan($doc_id);
+    }
+
+    public function hate($doc_id)
+    {
+        return $this->doctor->hate($doc_id);
+    }
+
+    public function getDoctorByCateId($cate_id, $doc_id)
+    {
+        return $this->doctor->getDoctorsByCateId($cate_id, $doc_id);
+    }
+
+    public function getDoctorCommentsTotalPage($doc_id)
+    {
+        $total_page = $this->doctor->getDoctorCommentsTotalNumber($doc_id);
+        return ceil($total_page / 6);
+    }
+
+    public function ajaxGetDoctorComments($page, $doc_id, $limit)
+    {
+        return $this->comment->ajaxGetDoctorComments($page, $doc_id, $limit);
+    }
+
+    public function getDoctorCommentsTotalNumber($doc_id)
+    {
+        return $this->doctor->getDoctorCommentsTotalNumber($doc_id);
     }
 }

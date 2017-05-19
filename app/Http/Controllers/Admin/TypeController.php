@@ -34,7 +34,7 @@ class TypeController extends Controller
     //get.admin/Category/create      添加权限界面
     public function create()
     {
-
+        return view('admin.type.add');
     }
 
     //post.admin/Category    添加权限提交
@@ -44,10 +44,11 @@ class TypeController extends Controller
         return json_encode($data);
     }
 
-    // get.admin/Category/{Category}/edit     编辑用户信息界面
-    public function edit($cate_id)
+    // get.admin/type/{type_id}/edit     编辑用户信息界面
+    public function edit($type_id)
     {
-//            form_editable.html
+        $type = $this->typeService->getTypeById($type_id);
+        return view('admin.type.edit')->with(compact('type'));
     }
 
     // put.admin/Category/{Type}       更新用户信息

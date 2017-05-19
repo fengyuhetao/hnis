@@ -40,6 +40,11 @@ class TypeService
         return $return;
     }
 
+    public function getAllType()
+    {
+        return $this->type->all()->toArray();
+    }
+
     public function getTypeById($type_id)
     {
         return $this->type->find($type_id)->toArray();

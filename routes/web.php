@@ -11,7 +11,7 @@
 |
 */
 
-\Debugbar::enable();
+//\Debugbar::enable();
 
 Route::get('/', function () {
     return view('welcome');
@@ -61,11 +61,25 @@ Route::group(['middleware' => 'admin.check.login', 'prefix'=>'admin', 'namespace
     Route::get('type/list', 'TypeController@ajaxGetTypeList');
 
     Route::resource('type', 'TypeController');
+
+    Route::resource('comment', 'CommentController');
 });
 
-Route::group(['middleware' => '',  'namespace' => 'Admin'], function() {
-    Route::get('user/regist', 'CommonController@regist');                //用户注册
-}
+//接口
+Route::group(['namespace' => 'Admin'], function() {
+    Route::get('patient/regist', 'PatientController@regist');
+    Route::get('doctor/regist', 'DoctorController@regist');
+    Route::get('slevelcategory', 'CategoryController@getSecondLevelCategory');
+    Route::get('getcategorysbypid', 'CategoryController@getCategorysByParentId');
+    Route::get('getportaldata', 'DoctorController@getPortalData');
+    Route::get('getdoctorsybywhere', 'DoctorController@getDoctorsByWhere');
+    Route::get('getDoctorAllInfoById', 'DoctorController@getDoctorAllInfoById');
+    Route::get('getDoctorPartInfoById', 'DoctorController@getDoctorPartInfoById');
+    Route::get('follow', 'DoctorController@follow');
+    Route::get('zan', 'DoctorController@zan');
+    Route::get('hate', 'DoctorController@hate');
+    Route::get('ajaxGetDoctorComments', "DoctorController@ajaxGetDoctorComments");
+});
 
 // 后台系统日志
 Route::group(['prefix' => 'admin/log','middleware' => []],function ($router)

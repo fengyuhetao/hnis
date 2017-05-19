@@ -11,16 +11,26 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\doctorRequest;
+use App\Service\Admin\CategoryService;
+use App\Service\Admin\CommentService;
 use App\Service\Admin\DoctorService;
+use App\Service\Admin\TypeService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
 class DoctorController extends Controller
 {
     private $doctorService;
+    private $commentService;
+    private $typeService;
+    private $categoryService;
 
-    public function __construct(DoctorService $doctorService)
+    public function __construct(DoctorService $doctorService, CommentService $commonService, TypeService $typeService, CategoryService $categoryService)
     {
         $this->doctorService = $doctorService;
+        $this->commentService = $commonService;
+        $this->typeService = $typeService;
+        $this->categoryService = $categoryService;
     }
 
     // get.admin/doctor
@@ -45,9 +55,14 @@ class DoctorController extends Controller
     }
 
     // get.admin/doctor/{doctor}/edit     编辑用户信息界面
-    public function edit($cate_id)
+    public function edit($doc_id)
     {
-        return view('admin.doctor.edit');
+//        查询所有分类
+        $categorys = $this->categoryService->getAllCategorys();
+//        查询所有类型
+        $types = $this->typeService->getAllType();
+        $doctor = $this->doctorService->getDoctorById($doc_id);
+        return view('admin.doctor.edit')->with(compact('doctor', 'types', 'categorys'));
     }
 
     // put.admin/doctor/{cate}       更新用户信息
@@ -73,7 +88,96 @@ class DoctorController extends Controller
     public function getdoctorById()
     {
         $cate_id = Input::get('cate_id');
-        return json_encode($this->doctorService->getdoctorById($cate_id));
+        return json_encode($this->doctorService->getDoctorById($cate_id));
+    }
+
+    public function getPortalData()
+    {
+        $carousels = $this->doctorService->getCarousels();
+//        从二级分类下获取医生
+//        外科获取7个医生
+        $doctors = $this->doctorService->getPortalDoctors();
+
+        $data = array(
+            'carousels' => $carousels,
+            'portalDoctors' => $doctors
+        );
+
+        return json_encode($data);
+    }
+
+    public function getDoctorsByWhere(Request $request)
+    {
+        $doctors = $this->doctorService->getDoctorsByWhere($request->all());
+        return json_encode($doctors);
+    }
+
+    public function getDoctorAllInfoById(Request $request)
+    {
+        $doc_id = $request->get('doc_id');
+        // 获取医生的个人信息
+        $doctor = $this->doctorService->getDoctorById($request->get('doc_id'));
+
+        //获取医生的4条最近评论
+        $comments = $this->doctorService->getDoctorComments($doc_id);
+
+//         获取医生的最近的4个诊断患者
+        $patients = $this->doctorService->getDoctorPatients($doc_id);
+
+        $data['doctor'] = $doctor;
+        $data['comments'] = $comments;
+        $data['patient'] = $patients;
+
+        return json_encode($data);
+    }
+
+    public function follow(Request $request)
+    {
+        $doc_id = $request->get('doc_id');
+        $result = $this->doctorService->follow($doc_id);
+        return $result;
+    }
+    public function zan(Request $request)
+    {
+        $doc_id = $request->get('doc_id');
+        $result = $this->doctorService->zan($doc_id);
+        return $result;
+    }
+
+    public function hate(Request $request)
+    {
+        $doc_id = $request->get('doc_id');
+        $result = $this->doctorService->hate($doc_id);
+        return $result;
+    }
+
+    public function getDoctorPartInfoById(Request $request)
+    {
+        $doc_id = $request->get('doc_id');
+        // 获取医生的个人信息
+        $doctor = $this->doctorService->getDoctorById($request->get('doc_id'));
+
+//        获取与该医生相同科室的其他医生
+        $doctors = $this->doctorService->getDoctorByCateId($doctor['cate_id'], $doc_id);
+
+//        获取评论的页数
+        $total_page = $this->doctorService->getDoctorCommentsTotalPage($doc_id);
+
+        $total_number = $this->doctorService->getDoctorCommentsTotalNumber($doc_id);
+        $data['doctor'] = $doctor;
+        $data['doctors'] = $doctors;
+        $data['total_page'] = $total_page;
+        $data['total_number'] = $total_number;
+        return json_encode($data);
+    }
+
+    public function ajaxGetDoctorComments(Request $request)
+    {
+        $limit = 6;
+        $page = $request->get('page');
+        $doc_id = $request->get('doc_id');
+        $data = $this->doctorService->ajaxGetDoctorComments($page, $doc_id, 6);
+        return "my(".json_encode($data).")";
     }
 
 }

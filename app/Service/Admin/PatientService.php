@@ -68,7 +68,7 @@ class PatientService
             $data['result'] = $result;
         }
 
-        $data['cate_id'] = $node['cate_id'];
+        $data['cate_id'] = $node['pat_id'];
 
         return $data;
     }
@@ -140,5 +140,6 @@ class PatientService
 
     public function getPatientById($pat_id)
     {
+        return $this->patient->find($pat_id);
     }
 }

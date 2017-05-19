@@ -15,13 +15,13 @@
                     <i class="fa fa-circle"></i>
                 </li>
                 <li>
-                    <span>患者管理</span>
+                    <span>类型管理</span>
                 </li>
             </ul>
         </div>
         <!-- END PAGE BAR -->
         <!-- BEGIN PAGE TITLE-->
-        <h1 class="page-title"> 添加患者
+        <h1 class="page-title"> 添加类型
         </h1>
         <!-- END PAGE TITLE-->
         <!-- END PAGE HEADER-->
@@ -32,7 +32,7 @@
                         <div class="portlet box blue-hoki">
                             <div class="portlet-title">
                                 <div class="caption">
-                                    <i class="fa fa-gift"></i>患者管理</div>
+                                    <i class="fa fa-gift"></i>类型管理</div>
                                 <div class="tools">
                                     <a href="javascript:;" class="collapse"> </a>
                                     <a href="javascript:;" class="reload"> </a>
@@ -51,48 +51,10 @@
                                     {{csrf_field()}}
                                     <div class="form-body">
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">姓名</label>
+                                            <label class="col-md-3 control-label">名称</label>
                                             <div class="col-md-4">
-                                                <input type="text" name="pat_name" value="{{$patient->pat_name}}" class="form-control" placeholder="请输入姓名">
+                                                <input type="text" name="pat_name" class="form-control" placeholder="名称">
                                                 {{--<span class="help-block"> A block of help text. </span>--}}
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-3 control-label">昵称</label>
-                                            <div class="col-md-4">
-                                                <input type="text" name="pat_nickname" value="{{$patient->pat_nickname}}"  class="form-control" placeholder="请输入昵称">
-                                                {{--<span class="help-block"> A block of help text. </span>--}}
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-3 control-label">邮箱</label>
-                                            <div class="col-md-4">
-                                                <input type="email" name="pat_email" class="form-control" value="{{$patient->pat_email}}"  placeholder="请输入邮箱">
-                                                {{--<span class="help-block"> A block of help text. </span>--}}
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-3 control-label">电话号码</label>
-                                            <div class="col-md-4">
-                                                <input type="text" name="doc_tel" class="form-control" value="{{$patient->pat_tel}}"  placeholder="请输入电话号码">
-                                                {{--<span class="help-block"> A block of help text. </span>--}}
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-3 control-label">头像</label>
-                                            <div class="col-md-9">
-                                                <div class="fileinput fileinput-new" data-provides="fileinput">
-                                                    <div class="fileinput-new thumbnail" style="width: 120px; height: 90px;">
-                                                        <img src="{{$patient->pat_face}}" alt="" /> </div>
-                                                    <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"> </div>
-                                                    <div>
-                                                                <span class="btn default btn-file">
-                                                                    <span class="fileinput-new"> 选择图片 </span>
-                                                                    <span class="fileinput-exists"> 更换 </span>
-                                                                    <input type="file" name="pat_face"/> </span>
-                                                        <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput"> 移除 </a>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>

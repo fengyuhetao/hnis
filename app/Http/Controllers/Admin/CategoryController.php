@@ -74,4 +74,16 @@ class CategoryController extends Controller
         $cate_id = Input::get('cate_id');
         return json_encode($this->categoryService->getCategoryById($cate_id));
     }
+
+    public function getCategorysByParentId()
+    {
+        $cate_pid = Input::get('cate_pid');
+        return json_encode($this->categoryService->getCategorysByParentId($cate_pid));
+    }
+
+    public function getSecondLevelCategory()
+    {
+        $data = $this->categoryService->getSecondLevelCategory();
+        return json_encode($data);
+    }
 }

@@ -195,4 +195,21 @@ class CategoryService
 
         return $return;
     }
+
+    public function getSecondLevelCategory()
+    {
+        $data = $this->category->findWhere(['cate_parent_id' => 1, 'cate_is_show' => 1], ['cate_id', 'cate_name'])->toArray();
+        return $data;
+    }
+
+    public function getCategorysByParentId($cate_pid)
+    {
+        $data = $this->category->findWhere(['cate_parent_id' => $cate_pid], ['cate_id', 'cate_name'])->toArray();
+        return $data;
+    }
+
+    public function getAllCategorys()
+    {
+        return $this->category->all()->toArray();
+    }
 }

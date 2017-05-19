@@ -39,6 +39,17 @@ if(! function_exists('show_is_new')) {
     }
 }
 
+//医生是否首页轮播显示
+if(! function_exists('doc_portal_show')) {
+    function doc_portal_show($doc_portal_show) {
+        if($doc_portal_show) {
+            return "<span class=\"label label-sm label-info\"> yes </span>";
+        } else {
+            return "<span class=\"label label-sm label-warning\"> no </span>";
+        }
+    }
+}
+
 //显示是否在线
 if(! function_exists('show_is_online')) {
     function show_is_online($is_online) {

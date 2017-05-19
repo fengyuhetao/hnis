@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\patientRequest;
 use App\Service\Admin\PatientService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
 class PatientController extends Controller
@@ -35,8 +36,8 @@ class PatientController extends Controller
         return view('admin.patient.add');
     }
 
-    //post.admin/patient    添加权限提交
-    public function store(patientRequest $request)
+    //post.admin/patient    添加患者提交
+    public function store(PatientRequest $request)
     {
         $data = $this->patientService->addPatient($request->except(['_token']));
         return json_encode($data);
@@ -45,7 +46,8 @@ class PatientController extends Controller
     // get.admin/patient/{patient}/edit     编辑用户信息界面
     public function edit($pat_id)
     {
-        return view('admin.patient.edit');
+        $patient = $this->patientService->getPatientById($pat_id);
+        return view('admin.patient.edit')->with(compact('patient'));
     }
 
     // put.admin/patient/{cate}       更新用户信息
@@ -74,9 +76,17 @@ class PatientController extends Controller
 //        return json_encode($this->patientService->getPatientById($pat_id));
     }
 
-    public function regist()
+
+    public function regist(Request $request)
     {
-        
+        $attributes = array();
+        $attributes['pat_nickname'] = $request->get('username');
+        $attributes['pat_tel'] = $request->get('tel');
+        $attributes['pat_password'] = $request->get('password');
+        $attributes['pat_addtime'] = date('Y-m-d h:i:s');
+
+        $data = $this->patientService->addPatient($attributes);
+        return $request->get('callback') ."(". json_encode($data).")";
     }
 
 }

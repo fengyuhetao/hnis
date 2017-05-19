@@ -114,8 +114,9 @@ var TableDatatablesManaged = function () {
                 { "data": "doc_is_new" },
                 { "data": "doc_is_online" },
                 { "data": "doc_is_delete" },
-                { "data": "doc_addtime"},
-                { "data": 'actions'}
+                { "data": "doc_portal_show" },
+                { "data": "doc_addtime" },
+                { "data": 'actions' }
             ],
             "order": [
                 [1, "asc"]

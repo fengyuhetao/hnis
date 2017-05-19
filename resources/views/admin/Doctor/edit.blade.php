@@ -1,6 +1,7 @@
 @extends('admin.layouts.admin')
 @section('plugincss')
     <link href="{{asset('resources/assets/global/plugins/icheck/skins/all.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('resources/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css')}}" rel="stylesheet" type="text/css" />
 @endsection
 @section('content')
     <!-- BEGIN CONTENT BODY -->
@@ -14,13 +15,13 @@
                     <i class="fa fa-circle"></i>
                 </li>
                 <li>
-                    <span>管理员管理</span>
+                    <span>医生管理</span>
                 </li>
             </ul>
         </div>
         <!-- END PAGE BAR -->
         <!-- BEGIN PAGE TITLE-->
-        <h1 class="page-title"> 添加管理员
+        <h1 class="page-title"> 修改医生
         </h1>
         <!-- END PAGE TITLE-->
         <!-- END PAGE HEADER-->
@@ -31,7 +32,7 @@
                         <div class="portlet box blue-hoki">
                             <div class="portlet-title">
                                 <div class="caption">
-                                    <i class="fa fa-gift"></i>角色</div>
+                                    <i class="fa fa-gift"></i>医生管理</div>
                                 <div class="tools">
                                     <a href="javascript:;" class="collapse"> </a>
                                     <a href="javascript:;" class="reload"> </a>
@@ -39,77 +40,89 @@
                                 </div>
                             </div>
                             <div class="portlet-body form">
-                                <!-- BEGIN FORM-->
-                                <form action="{{url('admin/role')}}/{{$roledata['role_id']}}" method="post" class="form-horizontal">
-                                    <input type="hidden" name="_method" value="put"/>
+                                @if(count($errors)>0)
+                                    <div class="alert alert-danger">
+                                        <button class="close" data-close="alert"></button>
+                                        <span>请检查表单后重新提交</span>
+                                    </div>
+                            @endif
+                            <!-- BEGIN FORM-->
+                                <form action="{{url('admin/admin')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                     {{csrf_field()}}
                                     <div class="form-body">
                                         <div class="form-group">
-                                            <label class="col-md-2 control-label">角色名称</label>
+                                            <label class="col-md-3 control-label">姓名</label>
                                             <div class="col-md-4">
-                                                <input type="text" name="role_name" value="{{$roledata['role_name']}}" class="form-control" placeholder="请输入角色名称">
-                                                {{--<span class="help-block"></span>--}}
+                                                <input type="text" name="doc_name" class="form-control" value="{{$doctor->doc_name}}" placeholder="请输入姓名">
+                                                {{--<span class="help-block"> A block of help text. </span>--}}
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-2 control-label">描述</label>
+                                            <label class="col-md-3 control-label">seo关键词</label>
                                             <div class="col-md-4">
-                                                <input type="text" name="role_desc" value="{{$roledata['role_desc']}}" class="form-control" placeholder="请输入详细描述">
-                                                <span class="help-block"></span>
+                                                <input type="text" name="doc_seo_keyword" class="form-control" value="{{$doctor->doc_seo_keyword}}" placeholder="请输入seo关键词">
+                                                {{--<span class="help-block"> A block of help text. </span>--}}
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-2 control-label">角色</label>
-                                            <div class="col-md-10">
-                                                <!-- BEGIN SAMPLE TABLE PORTLET-->
-                                                <div class="portlet-body">
-                                                    <div class="table-scrollable">
-                                                        <table class="table table-hover">
-                                                            <thead>
-                                                            <tr>
-                                                                <th class="col-md-2"> 模块 </th>
-                                                                <th style="text-align: center;"> 权限 </th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            @foreach($data as $v)
-                                                                <tr>
-                                                                    <td style="vertical-align: middle"> <div class="icheck-inline">
-                                                                            <label>
-                                                                                <input {{!in_array($v['id'], $rolePris) ?: "checked"}} type="checkbox" name="pris[]" value="{{$v['id']}}" class="icheck" data-checkbox="icheckbox_square-grey"> {{$v['text']}}  </label>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        @if(isset($v['children']))
-                                                                            @foreach($v['children'] as $v1)
-                                                                                <div class="col-md-3">
-                                                                                    <div class="icheck-inline">
-                                                                                        <label>
-                                                                                            <input {{!in_array($v1['id'], $rolePris) ?: "checked"}} type="checkbox" name="pris[]" value="{{$v1['id']}}" class="icheck" data-checkbox="icheckbox_square-grey"> {{$v1['text']}}  </label>
-                                                                                    </div>
-                                                                                </div>
-                                                                                @if(isset($v1['children']))
-                                                                                    @foreach($v1['children'] as $v2)
-                                                                                        <div class="col-md-3">
-                                                                                            <div class="icheck-inline">
-                                                                                                <label>
-                                                                                                    <input {{!in_array($v2['id'], $rolePris) ?: "checked"}} type="checkbox" value="{{$v2['id']}}" name="pris[]" class="icheck" data-checkbox="icheckbox_square-grey"> {{$v2['text']}}  </label>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    @endforeach
-                                                                                @endif
-                                                                            @endforeach
-                                                                        @endif
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
-                                                            </tbody>
-                                                        </table>
+                                            <label class="col-md-3 control-label">seo描述</label>
+                                            <div class="col-md-4">
+                                                <input type="text" name="doc_seo_description" value="{{$doctor->doc_seo_description}}" class="form-control" placeholder="请输入seo描述">
+                                                {{--<span class="help-block"> A block of help text. </span>--}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">医生描述</label>
+                                            <div class="col-md-4">
+                                                <textarea name="doc_desc" id="text" class="form-control" cols="30" rows="10" placeholder="医生描述">{{$doctor->doc_desc}}</textarea>
+                                                {{--<span class="help-block"> A block of help text. </span>--}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">电话号码</label>
+                                            <div class="col-md-4">
+                                                <input type="text" name="doc_tel" class="form-control" value="{{$doctor->doc_tel}}" placeholder="请输入电话号码">
+                                                {{--<span class="help-block"> A block of help text. </span>--}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">所属分类</label>
+                                            <div class="col-md-4">
+                                                <select name="doc_cate" id="" class="form-controller">
+                                                    @foreach($categorys as $v)
+                                                        <option value="{{$v['cate_id']}}">{{$v['cate_name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                {{--<span class="help-block"> A block of help text. </span>--}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">所属类型</label>
+                                            <div class="col-md-4">
+                                                <select name="doc_type" id="" class="form-controller">
+                                                    @foreach($types as $v)
+                                                        <option value="{{$v['type_id']}}">{{$v['type_name']}}</option>
+                                                    @endforeach
+                                                </select>
+                                                {{--<span class="help-block"> A block of help text. </span>--}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">头像</label>
+                                            <div class="col-md-9">
+                                                <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                    <div class="fileinput-new thumbnail" style="width: 120px; height: 90px;">
+                                                        <img src="{{$doctor->doc_face}}" alt="" /> </div>
+                                                    <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"> </div>
+                                                    <div>
+                                                                <span class="btn default btn-file">
+                                                                    <span class="fileinput-new"> 选择图片 </span>
+                                                                    <span class="fileinput-exists"> 更换 </span>
+                                                                    <input type="file" name="doc_face"/> </span>
+                                                        <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput"> 移除 </a>
                                                     </div>
                                                 </div>
-                                                <!-- END SAMPLE TABLE PORTLET-->
                                             </div>
-
                                         </div>
                                     </div>
                                     <div class="form-actions fluid">
@@ -130,17 +143,133 @@
         </div>
     </div>
     <!-- END CONTENT BODY -->
+    {{--BEGIN MODAL BODY--}}
+    <div id="long" class="modal fade modal-scroll" tabindex="-1" data-replace="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">角色信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="portlet light portlet-fit bordered">
+                        <div class="portlet-body form">
+                            <form action="#" class="form-horizontal">
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">角色名称</label>
+                                        <div class="col-md-5">
+                                            <input id="modal_role_name" type="text" disabled class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">描述</label>
+                                        <div class="col-md-5">
+                                            <input id="modal_role_desc" type="text" disabled class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">创建时间</label>
+                                        <div class="col-md-5">
+                                            <input id="modal_role_addtime" type="text" disabled class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- BEGIN SAMPLE TABLE PORTLET-->
+                            <div class="portlet light bordered">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="icon-social-dribbble font-green"></i>
+                                        <span class="caption-subject font-green bold uppercase">拥有权限</span>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="table-scrollable">
+                                        <table class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th> 模块 </th>
+                                                <th style="text-align: center;"> 权限 </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="pris">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END SAMPLE TABLE PORTLET-->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{--END MODAL BODY--}}
 @endsection
 @section('pluginjs')
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <script src="{{asset('resources/assets/global/plugins/icheck/icheck.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('resources/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js')}}" type="text/javascript"></script>
     <!-- END PAGE LEVEL PLUGINS -->
 @endsection
 @section('js')
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
+
+    <script type="text/javascript">
+        function setCurrentRole(role_id, role_name, role_desc, role_addtime) {
+            $("#modal_role_name")[0].value = role_name;
+            $("#modal_role_desc")[0].value = role_desc;
+            $("#modal_role_addtime")[0].value = role_addtime;
+
+//            获取该角色所有权限
+            $.ajax({
+                'type' : "get",
+                'dataType' : "json",
+                'url' : "{{url('admin/ajaxGetRolesByRoleId')}}",
+                'data': {'role_id': role_id},
+                success: function(data) {
+                    var html = "";
+                    for (var i = 0; i < data.length; i++) {
+                        html += "<tr>";
+                        html += "<td style=\"vertical-align: middle\">";
+                        html += data[i]['pri_name'];
+                        html += "</td>";
+                        html += "<td>";
+                        if(data[i].children != null) {
+                            for(var j = 0; j < data[i].children.length; j++) {
+                                html += "<div class=\"col-md-4\">";
+                                html += data[i]['children'][j]['pri_name'];
+                                html += "</div>";
+                                if(data[i]['children'][j].children != null) {
+                                    for(var k = 0; k < data[i]['children'][j].children.length; k++) {
+                                        html += "<div class=\"col-md-4\">";
+                                        html += data[i]['children'][j]['children'][k]['pri_name'];
+                                        html += "</div>";
+                                    }
+                                }
+
+                            }
+                        }
+                        html += "</td>";
+                        html += "</tr>";
+                    }
+                    $("#pris")[0].innerHTML = html;
+                }
+            })
+        }
+    </script>
+
     <script src="{{asset('resources/assets/pages/scripts/form-icheck.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('resources/assets/pages/scripts/form-samples.min.js')}}" type="text/javascript"></script>
-    <script src="{{asset('resources/assets/pages/scripts/ui-modals.js')}}" type="text/javascript"></script>
     <script src="{{asset('resources/org/uploadify/jquery.uploadify.min.js')}}" type="text/javascript"></script>
     <!-- END PAGE LEVEL SCRIPTS -->
 @endsection

@@ -15,18 +15,18 @@
                     <i class="fa fa-circle"></i>
                 </li>
                 <li>
-                    <a href="{{url('admin/doctor')}}">医生管理</a>
+                    <a href="{{url('admin/patient')}}">患者管理</a>
                     <i class="fa fa-circle"></i>
                 </li>
                 <li>
-                    <span>医生列表</span>
+                    <span>患者列表</span>
                 </li>
             </ul>
         </div>
         <!-- END PAGE BAR -->
         <!-- BEGIN PAGE TITLE-->
-        <h1 class="page-title"> 医生管理
-            <small>医生列表</small>
+        <h1 class="page-title"> 患者管理
+            <small>患者列表</small>
         </h1>
         <!-- END PAGE TITLE-->
         <!-- END PAGE HEADER-->
@@ -37,7 +37,7 @@
                     <div class="portlet-title">
                         <div class="caption font-dark">
                             <i class="icon-settings font-dark"></i>
-                            <span class="caption-subject bold uppercase"> 医生列表</span>
+                            <span class="caption-subject bold uppercase"> 患者列表</span>
                         </div>
                     </div>
                     <div class="portlet-body">
@@ -45,7 +45,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="btn-group">
-                                        <a href="{{url('admin/doctor/create')}}" id="sample_editable" class="btn sbold green"> 添加
+                                        <a href="{{url('admin/patient/create')}}" id="sample_editable" class="btn sbold green"> 添加
                                             <i class="fa fa-plus"></i>
                                         </a>
                                     </div>

@@ -168,7 +168,7 @@ return [
          */
         Laravel\Tinker\TinkerServiceProvider::class,
         Prettus\Repository\Providers\RepositoryServiceProvider::class, //l5-repository
-        Barryvdh\Debugbar\ServiceProvider::class,                      // debugar
+//        Barryvdh\Debugbar\ServiceProvider::class,                      // debugar
 
         /*
          * Application Service Providers...
@@ -227,7 +227,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Debugbar' => Barryvdh\Debugbar\Facade::class,
+//        'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 
 ];
