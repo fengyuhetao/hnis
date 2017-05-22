@@ -65,8 +65,9 @@ class DoctorRepositoryEloquent extends BaseRepository implements DoctorRepositor
         return Doctor::find($doc_id)->patients()->get()->toArray();
     }
 
-    public function follow($doc_id)
+    public function follow($doc_id, $pat_id)
     {
+        DB::table('hnis_follow')->insert(['pat_id' => $pat_id, 'doc_id' => $doc_id]);
         return DB::table('hnis_doctor')->where(['doc_id' => $doc_id])->increment('doc_follow_number');
     }
 

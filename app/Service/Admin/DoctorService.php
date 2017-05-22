@@ -250,9 +250,9 @@ class DoctorService
         return $this->doctor->getDoctorPatients($doc_id);
     }
 
-    public function follow($doc_id)
+    public function follow($doc_id, $pat_id)
     {
-        return $this->doctor->follow($doc_id);
+        return $this->doctor->follow($doc_id, $pat_id);
     }
 
     public function zan($doc_id)

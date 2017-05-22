@@ -134,7 +134,8 @@ class DoctorController extends Controller
     public function follow(Request $request)
     {
         $doc_id = $request->get('doc_id');
-        $result = $this->doctorService->follow($doc_id);
+        $pat_id= $request->get('pat_id');
+        $result = $this->doctorService->follow($doc_id, $pat_id);
         return $result;
     }
     public function zan(Request $request)
