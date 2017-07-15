@@ -24,12 +24,11 @@ class DoctorRequest extends FormRequest
         //        如果是添加操作
         if(request()->isMethod('POST')) {
             $rules['doc_name']              = 'required';
-            $rules['doc_score']             = 'required';
             $rules['doc_seo_keyword']       = 'required';
             $rules['doc_seo_description']   = 'required';
-            $rules['doc_sort_num']          = 'required';
             $rules['doc_tel']               = 'required';
-            $rules['doc_password']          = 'required';
+            $rules['doc_desc']              = 'required';
+            $rules['doc_simple_desc']       = 'required';
         }
 
         // 如果是修改操作

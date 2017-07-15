@@ -74,7 +74,10 @@ if(! function_exists('show_is_delete')) {
 
 if(! function_exists('show_actions')) {
     function show_actions($id, $table) {
-        $html = "<a href=\"" .url('admin/'.$table.'/show') . "\"><i title=\"查看\" class=\"fa fa-eye\"></i></a>&nbsp";
+        $html = "";
+        if($table != 'type') {
+            $html = "<a href=\"" .url('admin/'.$table.'/show') . "\"><i title=\"查看\" class=\"fa fa-eye\"></i></a>&nbsp";
+        }
         $html .= "<a href=\"" .url('admin/'.$table.''). "/". $id ."/edit\"><i title=\"修改\" class=\"fa fa-edit\"></i></a>&nbsp";
         $html .= "<a href=\"javascript:;\" id=\"delete_confirm\" onclick=\"doDelete(".$id.")\"><i title=\"删除\" class=\"fa fa-trash\"></i></a>";
         return $html;
@@ -138,16 +141,16 @@ if(! function_exists("get_children"))
 
 if(! function_exists("upload_pic"))
 {
-    function upload_pic($file)
+    function upload_pic($file, $name = "admin_pic")
     {
         if($file -> isValid()){
             $entension = $file -> getClientOriginalExtension(); //上传文件的后缀.
 //            判断后缀是否符合规则
 
             $newName = date('YmdHis').mt_rand(100,999).'.'.$entension;
-            $path = $file -> move(base_path().'/uploads',$newName);
+            $path = $file->move(base_path().'/uploads', $newName);
             $filepath = url("/") .'/uploads/'.$newName;
-            $attributes = ['admin_pic' => $filepath];
+            $attributes = [$name => $filepath];
             return $attributes;
         } else {
             return ['failed' => "上传失败"];

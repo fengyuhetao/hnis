@@ -47,7 +47,7 @@
                                     </div>
                             @endif
                             <!-- BEGIN FORM-->
-                                <form action="{{url('admin/admin')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
+                                <form action="{{url('admin/patient')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                     {{csrf_field()}}
                                     <div class="form-body">
                                         <div class="form-group">
@@ -74,7 +74,7 @@
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">电话号码</label>
                                             <div class="col-md-4">
-                                                <input type="text" name="doc_tel" class="form-control" placeholder="请输入电话号码">
+                                                <input type="text" name="pat_tel" class="form-control" placeholder="请输入电话号码">
                                                 {{--<span class="help-block"> A block of help text. </span>--}}
                                             </div>
                                         </div>

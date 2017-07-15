@@ -41,7 +41,7 @@ class DoctorRepositoryEloquent extends BaseRepository implements DoctorRepositor
      public function getDoctorList($params)
     {
         $offset = ($params['page'] - 1) * $params['limit'];
-        $doctors = DB::table('hnis_doctor')->select('doc_id', 'doc_name', 'doc_sm_face', 'doc_score', 'doc_seo_keyword', 'doc_seo_description', 'doc_sort_num', 'doc_tel', 'doc_follow_number', 'doc_admire_number', 'doc_hate_number', 'doc_is_new', 'doc_is_online', 'doc_is_delete', 'doc_portal_show', 'doc_addtime')
+        $doctors = DB::table('hnis_doctor')->select('doc_id', 'doc_name', 'doc_face', 'doc_score', 'doc_seo_keyword', 'doc_seo_description', 'doc_sort_num', 'doc_tel', 'doc_follow_number', 'doc_admire_number', 'doc_hate_number', 'doc_is_new', 'doc_is_online', 'doc_is_delete', 'doc_portal_show', 'doc_addtime')
             ->offset($offset)->limit($params['limit'])->get()->toArray();
         return $doctors;
     }
@@ -90,5 +90,15 @@ class DoctorRepositoryEloquent extends BaseRepository implements DoctorRepositor
     {
         $total_number = DB::table('hnis_comment')->where(['doc_id' => $doc_id])->count();
         return $total_number;
+    }
+
+    public function getDiangnoseTotalNumber($doc_id)
+    {
+        return DB::table('hnis_diagnose')->where(['doc_id' => $doc_id])->count();
+    }
+
+    public function getFollowedTotalNumber($doc_id)
+    {
+        return DB::table('hnis_follow')->where(['doc_id' => $doc_id])->count();
     }
 }

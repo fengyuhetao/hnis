@@ -96,13 +96,13 @@
                     </li>
                     <li class="nav-item  ">
                         <a href="{{url('admin/type')}}" class="nav-link ">
-                            <span class="title">分类管理</span>
+                            <span class="title">类型管理</span>
                             {{--<span class="badge badge-danger">2</span>--}}
                         </a>
                     </li>
                     <li class="nav-item  ">
                         <a href="{{url('admin/category')}}" class="nav-link ">
-                            <span class="title">类型管理</span>
+                            <span class="title">分类管理</span>
                             {{--<span class="badge badge-danger">2</span>--}}
                         </a>
                     </li>

@@ -10,7 +10,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\doctorRequest;
+use App\Http\Requests\DoctorRequest;
 use App\Service\Admin\CategoryService;
 use App\Service\Admin\CommentService;
 use App\Service\Admin\DoctorService;
@@ -44,13 +44,23 @@ class DoctorController extends Controller
     //get.admin/doctor/create      添加医生界面
     public function create()
     {
-        return view('admin.doctor.add');
+        //        查询所有分类
+        $categorys = $this->categoryService->getAllCategorys();
+//        查询所有类型
+        $types = $this->typeService->getAllType();
+
+        return view('admin.doctor.add')->with(compact('categorys', 'types'));
     }
 
     //post.admin/doctor    添加权限提交
-    public function store(doctorRequest $request)
+    public function store(DoctorRequest $request)
     {
-        $data = $this->doctorService->adddoctor($request->except(['_token']));
+
+        $file = null != $request->file('doc_face') ? $request->file('doc_face') : null;
+        $data = $this->doctorService->adddoctor($request->except(['_token']), $file);
+        if(strpos($request->server('HTTP_REFERER'), 'add') !== false) {
+            return redirect('admin/doctor');
+        }
         return json_encode($data);
     }
 
@@ -65,10 +75,14 @@ class DoctorController extends Controller
         return view('admin.doctor.edit')->with(compact('doctor', 'types', 'categorys'));
     }
 
-    // put.admin/doctor/{cate}       更新用户信息
-    public function update(doctorRequest $request, $cate_id)
+    // put.admin/doctor/{doc_id}       更新用户信息
+    public function update(doctorRequest $request, $doc_id)
     {
-        $data = $this->doctorService->updatedoctor($request->except('_token', '_method', 'method', 'uri', 'ip', 'pri_id'), $cate_id);
+        $file = null != $request->file('doc_face') ? $request->file('doc_face') : null;
+        $data = $this->doctorService->updateDoctor($request->except('_token', '_method'), $doc_id, $file);
+        if(strpos($request->server('HTTP_REFERER'), 'edit') !== false) {
+            return redirect('admin/doctor');
+        }
         return json_encode($data);
     }
 
@@ -87,8 +101,8 @@ class DoctorController extends Controller
 
     public function getdoctorById()
     {
-        $cate_id = Input::get('cate_id');
-        return json_encode($this->doctorService->getDoctorById($cate_id));
+        $doc_id = Input::get('doc_id');
+        return json_encode($this->doctorService->getDoctorById($doc_id));
     }
 
     public function getPortalData()
@@ -161,10 +175,10 @@ class DoctorController extends Controller
 //        获取与该医生相同科室的其他医生
         $doctors = $this->doctorService->getDoctorByCateId($doctor['cate_id'], $doc_id);
 
-//        获取评论的页数
-        $total_page = $this->doctorService->getDoctorCommentsTotalPage($doc_id);
-
         $total_number = $this->doctorService->getDoctorCommentsTotalNumber($doc_id);
+
+        //        获取评论的页数
+        $total_page = ceil($total_number / 6);
         $data['doctor'] = $doctor;
         $data['doctors'] = $doctors;
         $data['total_page'] = $total_page;
@@ -181,4 +195,69 @@ class DoctorController extends Controller
         return "my(".json_encode($data).")";
     }
 
+    public function ajaxUpdateDoctor(Request $request) {
+        $doc_id = $request->get('doc_id');
+        $data= $this->doctorService->updateDoctor($request->except('doc_id', 'callback', '_'), $doc_id);
+        return json_encode($data);
+    }
+
+    public function doctorResetPassword(Request $request) {
+        $doc_id = $request->get('doc_id');
+        $data = $this->doctorService->doctorResetPassword($request->except('doc_id', 'callback', '_'), $doc_id);
+        return "my(".json_encode($data) .")";
+    }
+
+    public function ajaxGetDoctorDiagnoses(Request $request)
+    {
+        $limit = 6;
+        $page = $request->get('page');
+        $doc_id = $request->get('doc_id');
+        $data = $this->doctorService->ajaxGetDoctorDiagnoses($page, $doc_id, 6);
+        return "my(".json_encode($data).")";
+    }
+
+    public function ajaxGetDoctorFolloweds(Request $request)
+    {
+        $limit = 6;
+        $page = $request->get('page');
+        $doc_id = $request->get('doc_id');
+        $data = $this->doctorService->ajaxGetDoctorFolloweds($page, $doc_id, 6);
+        return "my(".json_encode($data).")";
+    }
+
+    public function getDiagnoseInfo(Request $request)
+    {
+//        获取所有诊断数目
+        $total_number = $this->doctorService->getDiangnoseTotalNumber($request->get('doc_id'));
+//        获取所有页数
+        $page = ceil($total_number / 6);
+
+//        获取医生信息
+        $doctor = $this->doctorService->getDoctorById($request->get('doc_id'));
+        $data['total_number'] = $total_number;
+        $data['page'] = $page;
+        $data['doctor'] = $doctor;
+        return json_encode($data);
+    }
+
+    public function getFollowedInfo(Request $request)
+    {
+        //        获取所有追随者数目
+        $total_number = $this->doctorService->getFollowedTotalNumber($request->get('doc_id'));
+//        获取所有页数
+        $page = ceil($total_number / 6);
+
+//        获取医生信息
+        $doctor = $this->doctorService->getDoctorById($request->get('doc_id'));
+        $data['total_number'] = $total_number;
+        $data['page'] = $page;
+        $data['doctor'] = $doctor;
+        return json_encode($data);
+    }
+
+    public function changeOnline(Request $request) {
+        $doc_id = $request->get('doc_id');
+        $is_online = $request->get('is_online');
+        return $this->doctorService->changeOnline($doc_id, $is_online);
+    }
 }

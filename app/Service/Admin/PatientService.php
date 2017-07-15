@@ -10,6 +10,7 @@ namespace App\Service\Admin;
 
 use App\Repository\Eloquent\PatientRepositoryEloquent;
 use Exception;
+use Illuminate\Support\Facades\Hash;
 
 class PatientService
 {
@@ -26,11 +27,26 @@ class PatientService
      * @param $doc_id
      * @return array
      */
-    public function updatePatient($attributes, $doc_id)
+    public function updatePatient($attributes, $pat_id, $file)
     {
         $data = array(
             'code' => 1
         );
+
+        $path = array();
+//        上传图片
+//        判断是否上传了图片
+        if($file != null) {
+            $path = upload_pic($file, 'pat_face');
+
+            if(isset($path['failed'])) {
+                $data['code'] = 0;
+                $data['result'] = "图片上传失败";
+                return $data;
+            }
+
+            $attributes['pat_face'] = $path['pat_face'];
+        }
 
         foreach ($attributes as $k => $v) {
             if($v == "") {
@@ -38,7 +54,7 @@ class PatientService
             }
         }
         try {
-            if(!($result = $this->patient->update($attributes, $doc_id))) {
+            if(!($result = $this->patient->update($attributes, $pat_id))) {
                 $data['code'] = 0;
                 $data['result'] = $result;
             }
@@ -57,11 +73,29 @@ class PatientService
      * @param $attributes
      * @return array
      */
-    public function addPatient($attributes)
+    public function addPatient($attributes, $file = null)
     {
         $data = array(
             'code' => 1
         );
+
+        $path = array();
+//        上传图片
+//        判断是否上传了图片
+        if($file != null) {
+            $path = upload_pic($file, 'pat_face');
+
+            if(isset($path['failed'])) {
+                $data['code'] = 0;
+                $data['result'] = "图片上传失败";
+                return $data;
+            }
+
+            $attributes['pat_face'] = $path['pat_face'];
+        }
+
+        $attributes['pat_addtime'] = date("Y-m-d H:i:s");
+        $attributes['pat_password'] = Hash::make("root");
 
         if(!$node = $this->patient->create($attributes)) {
             $data['code'] = 0;
@@ -113,8 +147,8 @@ class PatientService
 
 //        处理$Patients
         foreach ($patients as $k => $v) {
-            if($v['pat_sm_face']) {
-                $patients[$k]['pat_sm_face'] = show_face($v['pat_sm_face'], 50, 50);
+            if($v['pat_face']) {
+                $patients[$k]['pat_face'] = show_face($v['pat_face'], 50, 50);
             }
 
             $patients[$k]['pat_is_delete'] = show_is_delete($v['pat_is_delete']);
@@ -140,6 +174,46 @@ class PatientService
 
     public function getPatientById($pat_id)
     {
-        return $this->patient->find($pat_id);
+        return $this->patient->find($pat_id)->toArray();
+    }
+
+    public function ajaxGetPatientFollows($page, $pat_id, $limit)
+    {
+        return $this->patient->ajaxGetPatientFollows($page, $pat_id, $limit);
+    }
+
+    public function ajaxGetPatientComments($page, $pat_id, $limit)
+    {
+        return $this->patient->ajaxGetPatientComments($page, $pat_id, $limit);
+    }
+
+    public function getFollowTotalNumber($pat_id)
+    {
+        return $this->patient->getFollowTotalNumber($pat_id);
+    }
+
+    public function getComentsTotalNumber($pat_id)
+    {
+        return $this->patient->getCommentsTotalNumber($pat_id);
+    }
+
+    public function getCommentsByPatId($page, $pat_id, $limit)
+    {
+        return $this->patient->ajaxGetPatientComments($page, $pat_id, $limit);
+    }
+
+    public function patientResetPassword($attributes, $pat_id)
+    {
+        $return = array('code' => 1);
+        $doctor = $this->getPatientById($doc_id);
+        $password = $doctor['pat_password'];
+        if(Hash::check($attributes['current_password'], $password)) {
+            $data = $this->updatePatient(['pat_password' => Hash::make($attributes['new_password'])], $doc_id);
+        } else {
+            $return['code'] = 0;
+            $return['fail_reason'] = "原密码输入不正确";
+        }
+
+        return $return;
     }
 }

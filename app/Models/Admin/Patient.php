@@ -16,7 +16,7 @@ class Patient extends Model
     protected $table = "hnis_patient";
     protected $primaryKey = "pat_id";
     public $timestamps = false;
-    protected $fillable = ['pat_name', 'pat_nickname', 'pat_addtime', 'pat_email', 'pat_email_code', 'pat_tel', 'pat_password', 'pat_money', 'pat_is_delete'];
+    protected $fillable = ['pat_face', 'pat_name', 'pat_nickname', 'pat_addtime', 'pat_email', 'pat_email_code', 'pat_tel', 'pat_password', 'pat_money', 'pat_is_delete'];
 
     public function doctors()
     {

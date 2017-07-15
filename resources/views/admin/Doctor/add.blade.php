@@ -47,7 +47,7 @@
                                     </div>
                             @endif
                             <!-- BEGIN FORM-->
-                                <form action="{{url('admin/admin')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
+                                <form action="{{url('admin/doctor')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                     {{csrf_field()}}
                                     <div class="form-body">
                                         <div class="form-group">
@@ -72,9 +72,23 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <label class="col-md-3 control-label">房间名称</label>
+                                            <div class="col-md-4">
+                                                <input type="text" name="doc_room_title" class="form-control" placeholder="请输入房间名称">
+                                                {{--<span class="help-block"> A block of help text. </span>--}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="col-md-3 control-label">医生描述</label>
                                             <div class="col-md-4">
                                                 <textarea name="doc_desc" id="text" class="form-control" cols="30" rows="10" placeholder="医生描述"></textarea>
+                                                {{--<span class="help-block"> A block of help text. </span>--}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">医生简单描述</label>
+                                            <div class="col-md-4">
+                                                <textarea name="doc_simple_desc" id="text" class="form-control" cols="30" rows="10" placeholder="医生描述"></textarea>
                                                 {{--<span class="help-block"> A block of help text. </span>--}}
                                             </div>
                                         </div>
@@ -88,8 +102,10 @@
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">所属分类</label>
                                             <div class="col-md-4">
-                                                <select name="doc_cate" id="" class="form-controller">
-
+                                                <select name="cate_id" id="" class="form-controller">
+                                                    @foreach($categorys as $v)
+                                                        <option value="{{$v['cate_id']}}">{{$v['cate_name']}}</option>
+                                                    @endforeach
                                                 </select>
                                                 {{--<span class="help-block"> A block of help text. </span>--}}
                                             </div>
@@ -98,15 +114,10 @@
                                             <label class="col-md-3 control-label">所属类型</label>
                                             <div class="col-md-4">
                                                 <select name="doc_type" id="" class="form-controller">
-
+                                                    @foreach($types as $v)
+                                                        <option value="{{$v['type_id']}}">{{$v['type_name']}}</option>
+                                                    @endforeach
                                                 </select>
-                                                {{--<span class="help-block"> A block of help text. </span>--}}
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-3 control-label">电话号码</label>
-                                            <div class="col-md-4">
-                                                <input type="text" name="doc_tel" class="form-control" placeholder="请输入电话号码">
                                                 {{--<span class="help-block"> A block of help text. </span>--}}
                                             </div>
                                         </div>

@@ -54,7 +54,10 @@ class TypeController extends Controller
     // put.admin/Category/{Type}       更新用户信息
     public function update(TypeRequest $request, $type_id)
     {
-        $data = $this->typeService->updateType($request->except('_token', '_method', 'method', 'uri', 'ip', 'pri_id'), $type_id);
+        $data = $this->typeService->updateType($request->except('_token', '_method', 'method', 'uri', 'ip'), $type_id);
+        if(strpos($request->server('HTTP_REFERER'), 'edit') !== false) {
+            return redirect('admin/type');
+        }
         return json_encode($data);
     }
 

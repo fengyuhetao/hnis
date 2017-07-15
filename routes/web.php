@@ -79,6 +79,23 @@ Route::group(['namespace' => 'Admin'], function() {
     Route::get('zan', 'DoctorController@zan');
     Route::get('hate', 'DoctorController@hate');
     Route::get('ajaxGetDoctorComments', "DoctorController@ajaxGetDoctorComments");
+    Route::get('getdoctorById', "DoctorController@getdoctorById");
+    Route::get('getCategorys', "CategoryController@ajaxGetCategoryList");
+    Route::get('ajaxUpdateDoctor', "DoctorController@ajaxUpdateDoctor");
+    Route::get('doctorResetPassword', "DoctorController@doctorResetPassword");
+    Route::get('getDiagnoseInfo', "DoctorController@ajaxGetDoctorDiagnoses");
+    Route::get('getDiagnoseInfo', "DoctorController@getDiagnoseInfo");
+    Route::get('ajaxGetDoctorDiagnoses', "DoctorController@ajaxGetDoctorDiagnoses");
+    Route::get('getFollowedInfo', "DoctorController@getFollowedInfo");
+    Route::get('getDoctorFolloweds', "DoctorController@ajaxGetDoctorFolloweds");
+    Route::get('getFollowInfo', "PatientController@getFollowInfo");
+    Route::get('getMyFollows', "PatientController@ajaxGetPatientFollows");
+    Route::get('getCommentInfo', "PatientController@getCommentInfo");
+    Route::get('ajaxGetComments', "PatientController@getCommentsByPatId");
+    Route::get('getpatientById', "PatientController@getpatientById");
+    Route::get('ajaxUpdatePatient', "PatientController@ajaxUpdatePatient");
+    Route::get('patientResetPassword', "PatientController@patientResetPassword");
+    Route::get('changeOnline', "DoctorController@changeOnline");
 });
 
 // 后台系统日志

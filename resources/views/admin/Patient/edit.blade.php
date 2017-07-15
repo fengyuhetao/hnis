@@ -47,7 +47,7 @@
                                     </div>
                             @endif
                             <!-- BEGIN FORM-->
-                                <form action="{{url('admin/admin')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
+                                <form action="{{url('admin/patient')}}/{{$patient->pat_id}}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                     {{csrf_field()}}
                                     <div class="form-body">
                                         <div class="form-group">

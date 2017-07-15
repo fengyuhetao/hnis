@@ -55,10 +55,10 @@ class PatientRequest extends FormRequest
     public function attributes()
     {
         return [
-            'cate_id'   => "分类ID",
-            'cate_name'   => "分类名称",
-            'cate_parent_id'       => "分类父ID",
-            'cate_sort_num'         => "分类排序"
+            'pat_id'   => "用户ID",
+            'pat_name'   => "用户名称",
+            'pat_nickname'       => "用户昵称",
+            'pat_tel'         => "用户电话号码"
         ];
     }
 }

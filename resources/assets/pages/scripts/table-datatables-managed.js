@@ -102,7 +102,7 @@ var TableDatatablesManaged = function () {
             columns: [
                 { "data": "doc_id" },
                 { "data": "doc_name" },
-                { "data": "doc_sm_face" },
+                { "data": "doc_face" },
                 { "data": "doc_score" },
                 { "data": "doc_seo_keyword" },
                 { "data": "doc_seo_description" },

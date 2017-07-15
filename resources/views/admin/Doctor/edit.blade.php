@@ -47,50 +47,55 @@
                                     </div>
                             @endif
                             <!-- BEGIN FORM-->
-                                <form action="{{url('admin/admin')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
+                                <form action="{{url('admin/doctor')}}/{{$doctor['doc_id']}}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                     {{csrf_field()}}
+                                    <input type="hidden" name="_method" value="put"/>
                                     <div class="form-body">
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">姓名</label>
                                             <div class="col-md-4">
-                                                <input type="text" name="doc_name" class="form-control" value="{{$doctor->doc_name}}" placeholder="请输入姓名">
+                                                <input type="text" name="doc_name" class="form-control" value="{{$doctor['doc_name']}}" placeholder="请输入姓名">
                                                 {{--<span class="help-block"> A block of help text. </span>--}}
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">seo关键词</label>
                                             <div class="col-md-4">
-                                                <input type="text" name="doc_seo_keyword" class="form-control" value="{{$doctor->doc_seo_keyword}}" placeholder="请输入seo关键词">
+                                                <input type="text" name="doc_seo_keyword" class="form-control" value="{{$doctor['doc_seo_keyword']}}" placeholder="请输入seo关键词">
                                                 {{--<span class="help-block"> A block of help text. </span>--}}
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">seo描述</label>
                                             <div class="col-md-4">
-                                                <input type="text" name="doc_seo_description" value="{{$doctor->doc_seo_description}}" class="form-control" placeholder="请输入seo描述">
+                                                <input type="text" name="doc_seo_description" value="{{$doctor['doc_seo_description']}}" class="form-control" placeholder="请输入seo描述">
                                                 {{--<span class="help-block"> A block of help text. </span>--}}
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">医生描述</label>
                                             <div class="col-md-4">
-                                                <textarea name="doc_desc" id="text" class="form-control" cols="30" rows="10" placeholder="医生描述">{{$doctor->doc_desc}}</textarea>
+                                                <textarea name="doc_desc" id="text" class="form-control" cols="30" rows="10" placeholder="医生描述">{{$doctor['doc_desc']}}</textarea>
                                                 {{--<span class="help-block"> A block of help text. </span>--}}
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">电话号码</label>
                                             <div class="col-md-4">
-                                                <input type="text" name="doc_tel" class="form-control" value="{{$doctor->doc_tel}}" placeholder="请输入电话号码">
+                                                <input type="text" name="doc_tel" class="form-control" value="{{$doctor['doc_tel']}}" placeholder="请输入电话号码">
                                                 {{--<span class="help-block"> A block of help text. </span>--}}
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">所属分类</label>
                                             <div class="col-md-4">
-                                                <select name="doc_cate" id="" class="form-controller">
+                                                <select name="cate_id" id="" class="form-controller">
                                                     @foreach($categorys as $v)
-                                                        <option value="{{$v['cate_id']}}">{{$v['cate_name']}}</option>
+                                                        <option
+                                                            @if($v['cate_id'] == $doctor['cate_id'])
+                                                                {{'selected'}}
+                                                            @endif
+                                                                value="{{$v['cate_id']}}">{{$v['cate_name']}}</option>
                                                     @endforeach
                                                 </select>
                                                 {{--<span class="help-block"> A block of help text. </span>--}}
@@ -99,7 +104,7 @@
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">所属类型</label>
                                             <div class="col-md-4">
-                                                <select name="doc_type" id="" class="form-controller">
+                                                <select name="type_id" id="" class="form-controller">
                                                     @foreach($types as $v)
                                                         <option value="{{$v['type_id']}}">{{$v['type_name']}}</option>
                                                     @endforeach
@@ -112,7 +117,7 @@
                                             <div class="col-md-9">
                                                 <div class="fileinput fileinput-new" data-provides="fileinput">
                                                     <div class="fileinput-new thumbnail" style="width: 120px; height: 90px;">
-                                                        <img src="{{$doctor->doc_face}}" alt="" /> </div>
+                                                        <img src="{{$doctor['doc_face']}}" alt="" /> </div>
                                                     <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"> </div>
                                                     <div>
                                                                 <span class="btn default btn-file">
@@ -256,7 +261,6 @@
                                         html += "</div>";
                                     }
                                 }
-
                             }
                         }
                         html += "</td>";

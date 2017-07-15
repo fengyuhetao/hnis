@@ -13,6 +13,7 @@ use App\Repository\Eloquent\CategoryRepositoryEloquent;
 use App\Repository\Eloquent\CommentRepositoryEloquent;
 use App\Repository\Eloquent\DoctorRepositoryEloquent;
 use Exception;
+use Illuminate\Support\Facades\Hash;
 
 class DoctorService
 {
@@ -41,11 +42,26 @@ class DoctorService
      * @param $doc_id
      * @return array
      */
-    public function updateDoctor($attributes, $doc_id)
+    public function updateDoctor($attributes, $doc_id, $file = null)
     {
         $data = array(
             'code' => 1
         );
+
+        $path = array();
+//        上传图片
+//        判断是否上传了图片
+        if($file != null) {
+            $path = upload_pic($file, 'doc_face');
+
+            if(isset($path['failed'])) {
+                $data['code'] = 0;
+                $data['result'] = "图片上传失败";
+                return $data;
+            }
+
+            $attributes['doc_face'] = $path['doc_face'];
+        }
 
         foreach ($attributes as $k => $v) {
             if($v == "") {
@@ -72,11 +88,32 @@ class DoctorService
      * @param $attributes
      * @return array
      */
-    public function addDoctor($attributes)
+    public function addDoctor($attributes, $file = null)
     {
         $data = array(
             'code' => 1
         );
+
+        $path = array();
+//        上传图片
+//        判断是否上传了图片
+        if($file != null) {
+            $path = upload_pic($file, 'doc_face');
+
+            if(isset($path['failed'])) {
+                $data['code'] = 0;
+                $data['result'] = "图片上传失败";
+                return $data;
+            }
+
+            $attributes['doc_face'] = $path['doc_face'];
+            $attributes['doc_video_face'] = $path['doc_face'];
+        }
+
+        $attributes['doc_score'] = 100;
+        $attributes['doc_sort_num'] = 100;
+        $attributes['doc_addtime'] = date("Y-m-d H:i:s");
+        $attributes['doc_password'] = Hash::make("root");
 
         if(!$node = $this->doctor->create($attributes)) {
             $data['code'] = 0;
@@ -128,8 +165,8 @@ class DoctorService
 
 //        处理$doctors
         foreach ($doctors as $k => $v) {
-            if($v['doc_sm_face']) {
-                $doctors[$k]['doc_sm_face'] = show_face($v['doc_sm_face'], 50, 50);
+            if($v['doc_face']) {
+                $doctors[$k]['doc_face'] = show_face($v['doc_face'], 50, 50);
             }
 
             $doctors[$k]['doc_is_new'] = show_is_new($v['doc_is_new']);
@@ -270,12 +307,6 @@ class DoctorService
         return $this->doctor->getDoctorsByCateId($cate_id, $doc_id);
     }
 
-    public function getDoctorCommentsTotalPage($doc_id)
-    {
-        $total_page = $this->doctor->getDoctorCommentsTotalNumber($doc_id);
-        return ceil($total_page / 6);
-    }
-
     public function ajaxGetDoctorComments($page, $doc_id, $limit)
     {
         return $this->comment->ajaxGetDoctorComments($page, $doc_id, $limit);
@@ -284,5 +315,45 @@ class DoctorService
     public function getDoctorCommentsTotalNumber($doc_id)
     {
         return $this->doctor->getDoctorCommentsTotalNumber($doc_id);
+    }
+
+    public function doctorResetPassword($attributes, $doc_id)
+    {
+        $return = array('code' => 1);
+        $doctor = $this->getDoctorById($doc_id);
+        $password = $doctor['doc_password'];
+        if(Hash::check($attributes['current_password'], $password)) {
+            $data = $this->updateDoctor(['doc_password' => Hash::make($attributes['new_password'])], $doc_id);
+        } else {
+            $return['code'] = 0;
+            $return['fail_reason'] = "原密码输入不正确";
+        }
+
+        return $return;
+    }
+
+    public function ajaxGetDoctorDiagnoses($page, $doc_id, $limit)
+    {
+        return $this->comment->ajaxGetDoctorDiagnoses($page, $doc_id, $limit);
+    }
+
+    public function ajaxGetDoctorFolloweds($page, $doc_id, $limit)
+    {
+        return $this->comment->ajaxGetDoctorFolloweds($page, $doc_id, $limit);
+    }
+
+    public function getDiangnoseTotalNumber($doc_id)
+    {
+        return $this->doctor->getDiangnoseTotalNumber($doc_id);
+    }
+
+    public function getFollowedTotalNumber($doc_id)
+    {
+        return $this->doctor->getFollowedTotalNumber($doc_id);
+    }
+
+    public function changeOnline($doc_id, $doc_is_online = 1)
+    {
+        return $this->doctor->update(['doc_is_online' => $doc_is_online], $doc_id);
     }
 }

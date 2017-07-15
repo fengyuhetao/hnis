@@ -16,7 +16,7 @@ class Doctor extends Model
     protected $table = "hnis_doctor";
     protected $primaryKey = "doc_id";
     public $timestamps = false;
-    protected $fillable = ['doc_name', 'doc_is_delete'];
+    protected $fillable = ['doc_name', 'doc_is_online', 'doc_is_delete', 'doc_tel', 'doc_seo_keyword', 'doc_seo_description', 'doc_desc', 'doc_room_title', 'doc_simple_desc', 'cate_id', 'doc_face', 'doc_password', 'doc_addtime'];
 
     public function categorys()
     {

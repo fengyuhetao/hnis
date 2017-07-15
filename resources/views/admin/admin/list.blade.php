@@ -21,15 +21,15 @@
         <div class="page-bar">
             <ul class="page-breadcrumb">
                 <li>
-                    <a href="index.html">Home</a>
+                    <a href="{{url('admin/index')}}">首页</a>
                     <i class="fa fa-circle"></i>
                 </li>
                 <li>
-                    <a href="#">Tables</a>
+                    <a href="#">管理员管理</a>
                     <i class="fa fa-circle"></i>
                 </li>
                 <li>
-                    <span>Datatables</span>
+                    <span>管理员列表</span>
                 </li>
             </ul>
         </div>

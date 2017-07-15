@@ -103,7 +103,7 @@ var TableDatatablesManaged = function () {
                 { "data": "pat_id" },
                 { "data": "pat_name" },
                 { "data": "pat_nickname" },
-                { "data": "pat_sm_face" },
+                { "data": "pat_face" },
                 { "data": "pat_tel" },
                 { "data": "pat_addtime" },
                 { "data": "pat_email" },

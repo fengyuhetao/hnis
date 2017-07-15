@@ -47,13 +47,14 @@
                                     </div>
                             @endif
                             <!-- BEGIN FORM-->
-                                <form action="{{url('admin/admin')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
+                                <form action="{{url('admin/type')}}/{{$type['type_id']}}" method="post" class="form-horizontal">
                                     {{csrf_field()}}
+                                    <input type="hidden" name="_method" value="put"/>
                                     <div class="form-body">
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">名称</label>
                                             <div class="col-md-4">
-                                                <input type="text" name="pat_name" value="{{$type['type_name']}}" class="form-control" placeholder="名称">
+                                                <input type="text" name="type_name" value="{{$type['type_name']}}" class="form-control" placeholder="名称">
                                                 {{--<span class="help-block"> A block of help text. </span>--}}
                                             </div>
                                         </div>

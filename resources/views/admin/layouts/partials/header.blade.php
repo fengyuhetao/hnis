@@ -3,7 +3,7 @@
     <!-- BEGIN LOGO -->
     <div class="page-logo">
         <a href="{{url('admin/index')}}">
-            <img src="{{asset('resources/assets/layouts/layout/img/logo.png')}}" alt="logo" class="logo-default" /> </a>
+            <img src="{{asset('resources/assets/layouts/layout/img/logo.png')}}" width="81" height="14" alt="logo" class="logo-default" /> </a>
         <div class="menu-toggler sidebar-toggler">
             <span></span>
         </div>

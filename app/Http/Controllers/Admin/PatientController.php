@@ -39,7 +39,12 @@ class PatientController extends Controller
     //post.admin/patient    添加患者提交
     public function store(PatientRequest $request)
     {
-        $data = $this->patientService->addPatient($request->except(['_token']));
+        $file = null != $request->file('pat_face') ? $request->file('pat_face') : null;
+        $data = $this->patientService->addPatient($request->except(['_token']), $file);
+        if(strpos($request->server('HTTP_REFERER'), 'add') !== false) {
+            return redirect('admin/patient');
+        }
+
         return json_encode($data);
     }
 
@@ -53,7 +58,11 @@ class PatientController extends Controller
     // put.admin/patient/{cate}       更新用户信息
     public function update(patientRequest $request, $pat_id)
     {
-        $data = $this->patientService->updatePatient($request->except('_token', '_method', 'method', 'uri', 'ip', 'pri_id'), $pat_id);
+        $file = null != $request->file('pat_face') ? $request->file('pat_face') : null;
+        $data = $this->patientService->updatePatient($request->except('_token', '_method'), $pat_id, $file);
+        if(strpos($request->server('HTTP_REFERER'), 'edit') !== false) {
+            return redirect('admin/doctor');
+        }
         return json_encode($data);
     }
 
@@ -70,10 +79,10 @@ class PatientController extends Controller
         return json_encode($this->patientService->getPatientList($params));
     }
 
-    public function getPatientById()
+    public function getpatientById()
     {
         $pat_id = Input::get('pat_id');
-//        return json_encode($this->patientService->getPatientById($pat_id));
+        return json_encode($this->patientService->getPatientById($pat_id));
     }
 
 
@@ -89,4 +98,74 @@ class PatientController extends Controller
         return $request->get('callback') ."(". json_encode($data).")";
     }
 
+    public function ajaxGetPatientFollows(Request $request)
+    {
+        $limit = 6;
+        $page = $request->get('page');
+        $pat_id = $request->get('pat_id');
+        $data = $this->patientService->ajaxGetPatientFollows($page, $pat_id, 6);
+        return "my(".json_encode($data).")";
+    }
+
+    public function ajaxGetPatientComments(Request $request)
+    {
+        $limit = 6;
+        $page = $request->get('page');
+        $pat_id = $request->get('$pat_id');
+        $data = $this->patientService->ajaxGetPatientComments($page, $pat_id, 6);
+        return "my(".json_encode($data).")";
+    }
+
+    public function getFollowInfo(Request $request)
+    {
+//        获取所有诊断数目
+        $total_number = $this->patientService->getFollowTotalNumber($request->get('pat_id'));
+//        获取所有页数
+        $page = ceil($total_number / 6);
+
+//        获取医生信息
+        $patient = $this->patientService->getPatientById($request->get('pat_id'));
+        $data['total_number'] = $total_number;
+        $data['page'] = $page;
+        $data['patient'] = $patient;
+        return json_encode($data);
+    }
+
+    public function getCommentInfo(Request $request)
+    {
+        //        获取所有评论数目
+        $total_number = $this->patientService->getComentsTotalNumber($request->get('pat_id'));
+//        获取所有页数
+        $page = ceil($total_number / 6);
+
+//        获取患者信息
+        $patient = $this->patientService->getPatientById($request->get('pat_id'));
+        $data['total_number'] = $total_number;
+        $data['page'] = $page;
+        $data['patient'] = $patient;
+        return json_encode($data);
+    }
+
+    public function getCommentsByPatId(Request $request)
+    {
+        $limit = 6;
+        $page = $request->get('page');
+        $pat_id = $request->get('pat_id');
+        $data = $this->patientService->getCommentsByPatId($page, $pat_id, 6);
+        return "my(".json_encode($data).")";
+    }
+
+    public function ajaxUpdatePatient(Request $request)
+    {
+        $pat_id = $request->get('pat_id');
+        $data = $this->patientService->updatePatient($request->except( 'pat_id'), $pat_id);
+        return json_encode($data);
+    }
+
+    public function patientResetPassword(Request $request)
+    {
+        $pat_id = $request->get('pat_id');
+        $data = $this->patientService->patientResetPassword($request->except('pat_id', 'callback', '_'), $pat_id);
+        return "my(".json_encode($data) .")";
+    }
 }
